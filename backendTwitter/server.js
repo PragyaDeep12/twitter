@@ -29,22 +29,23 @@ io.on("connection", socket => {
   var filter = false;
   while (!filter) {
     try {
-      socket.emit("newtweet", tweets);
+      // socket.emit("newtweet", tweets);
       filter = true;
     } catch (err) {
       console.log(err);
     }
   }
 });
-
-io.listen(process.env.PORT || 4000);
-var stream = twitter.stream("statuses/sample");
-
 stream.on("data", function(tweet) {
   // console.log(tweet);
   tweets.push(tweet);
   filter = true;
+  io.sockets.emit("newtweet", tweets);
 });
+
+io.listen(process.env.PORT || 4000);
+var stream = twitter.stream("statuses/sample");
+
 // app.use(express.json());
 // app.use(express.urlencoded({ extended: true }));
 // // app.use(express.static(__dirname + "/dist"));
