@@ -21,6 +21,8 @@ const twitter = new twit({
   access_token_secret: ACCESS_TOKEN_SECRET
 });
 var tweets = [];
+
+var stream = twitter.stream("statuses/sample");
 io.on("connection", socket => {
   console.log("connected");
   socket.on("disconnect", data => {
@@ -44,7 +46,6 @@ stream.on("data", function(tweet) {
 });
 
 io.listen(process.env.PORT || 4000);
-var stream = twitter.stream("statuses/sample");
 
 // app.use(express.json());
 // app.use(express.urlencoded({ extended: true }));
