@@ -9,7 +9,7 @@ import TweetsPage from "./Pages/TweetsPage";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { newRequestArrived } from "./Actions/TweetsAction";
 function App(props) {
-  socket.on("newRequestArrived", data => {
+  socket.on("newtweet", data => {
     console.log(data);
     store.dispatch(newRequestArrived(data));
   });
