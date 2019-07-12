@@ -3,7 +3,7 @@ import { NEW_TWEET_ARRIVED, NEW_TWEET_RAISED } from "../AppConstants";
 import { socket } from "../Dao/SocketDao";
 import TweetsModel from "../Models/TweetsModel";
 
-const initialState: TweetsModel[] = [];
+const initialState: any[] = [];
 export default function tweetsReducer(state: TweetsModel[] = [], action: any) {
   // var user: User;
   switch (action.type) {
@@ -18,7 +18,7 @@ export default function tweetsReducer(state: TweetsModel[] = [], action: any) {
     case NEW_TWEET_ARRIVED: {
       //instead of pushing to  array you can push to socket4
       //console.log("pushing messggae through new request arrived");
-      state.unshift(action.payload as TweetsModel);
+      state.unshift(action.payload);
       return state;
     }
 

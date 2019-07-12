@@ -20,7 +20,7 @@ const twitter = new twit({
   access_token_key: ACCESS_TOKEN,
   access_token_secret: ACCESS_TOKEN_SECRET
 });
-var tweets = [];
+// var tweets = [];
 
 var stream = twitter.stream("statuses/sample");
 io.on("connection", socket => {
@@ -28,22 +28,53 @@ io.on("connection", socket => {
   socket.on("disconnect", data => {
     console.log("disconnected");
   });
-  var filter = false;
-  while (!filter) {
-    try {
-      // socket.emit("newtweet", tweets);
-      filter = true;
-    } catch (err) {
-      console.log(err);
-    }
-  }
+  socket.on("checkData", data => {
+    var count = 0;
+    var s = stream.on("data", tweet => {
+      if (count < data.limit) {
+        console.log(tweet);
+        socket.emit("newtweet", { text: tweet.text, time: tweet.timestamp_ms });
+        count++;
+      } else {
+        console.log("removed all listners");
+        s.removeAllListeners();
+      }
+    });
+
+    // stream.setMaxListeners(60);
+    // stream.once(data.url, tweets => {
+    //   socket.emit("newtweet", tweets);
+    //   console.log(tweets);
+    // });
+    // twitter.get(data.url, data.params, (err, tweets, response) => {
+    //   if (!err) {
+    //     console.log(data);
+    //     socket.emit("newtweet", tweets);
+    //   } else {
+    //     console.log(err);
+    //   }
+    // });
+  });
+  // var filter = false;
+  // while (!filter) {
+  //   try {
+  //     // socket.emit("newtweet", tweets);
+  //     filter = true;
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // }
 });
-stream.on("data", function(tweet) {
-  // console.log(tweet);
-  tweets.push(tweet);
-  filter = true;
-  io.sockets.emit("newtweet", tweets);
-});
+// stream.on("data", function(tweet) {
+//   // console.log(tweet);
+
+//   var t=setTimeout(()=>{
+//     tweets.push(tweet);
+//     filter = true;
+//     io.sockets.emit("newtweet", tweets);
+//   },2000);
+//   // console.log(tweet);
+// });
 
 io.listen(process.env.PORT || 4000);
 

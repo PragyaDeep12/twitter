@@ -5,10 +5,16 @@ import { socket } from "./Dao/SocketDao";
 
 import store from "./Reducer/Store";
 import "./App.css";
+import "./styles/stylesheet.css";
 import TweetsPage from "./Pages/TweetsPage";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { newRequestArrived } from "./Actions/TweetsAction";
 function App(props) {
+  socket.emit("checkData", {
+    url: "/statuses/sample",
+    params: { name: "sharukh" },
+    limit: 10
+  });
   socket.on("newtweet", data => {
     console.log(data);
     store.dispatch(newRequestArrived(data));
