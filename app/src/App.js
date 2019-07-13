@@ -1,22 +1,18 @@
 import React from "react";
 import logo from "./logo.svg";
 import { connect, Provider } from "react-redux";
-import { socket } from "./Dao/SocketDao";
-
+import { socket, fetchData } from "./Dao/SocketDao";
 import store from "./Reducer/Store";
 import "./App.css";
 import "./styles/stylesheet.css";
+
+import "./styles/bootstrap.css";
 import TweetsPage from "./Pages/TweetsPage";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { newRequestArrived } from "./Actions/TweetsAction";
 function App(props) {
-  socket.emit("checkData", {
-    url: "/statuses/sample",
-    params: { name: "sharukh" },
-    limit: 10
-  });
+  fetchData();
   socket.on("newtweet", data => {
-    console.log(data);
     store.dispatch(newRequestArrived(data));
   });
   return (
@@ -25,7 +21,7 @@ function App(props) {
         {/* <CustomSnackbar /> */}
         <Router>
           <Switch>
-            <Route path="/tweets" component={TweetsPage} />
+            <Route path="/" component={TweetsPage} />
           </Switch>
         </Router>
       </Provider>

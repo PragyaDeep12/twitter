@@ -1,10 +1,10 @@
 import { NEW_TWEET_ARRIVED, NEW_TWEET_RAISED } from "../AppConstants";
 
 import { socket } from "../Dao/SocketDao";
-import TweetsModel from "../Models/TweetsModel";
+import { TweetModel } from "../Models/TweetModel";
 
-const initialState: any[] = [];
-export default function tweetsReducer(state: TweetsModel[] = [], action: any) {
+const initialState: TweetModel[] = [];
+export default function tweetsReducer(state: TweetModel[] = [], action: any) {
   // var user: User;
   switch (action.type) {
     case NEW_TWEET_RAISED: {

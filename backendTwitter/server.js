@@ -30,14 +30,20 @@ io.on("connection", socket => {
   });
   socket.on("checkData", data => {
     var count = 0;
+    var tweets = [];
     var s = stream.on("data", tweet => {
       if (count < data.limit) {
         console.log(tweet);
-        socket.emit("newtweet", { text: tweet.text, time: tweet.timestamp_ms });
-        count++;
+        if (tweet && tweet.lang && tweet.lang === "en") {
+          // socket.emit("newtweet", tweet);
+          tweets.push(tweet);
+          count++;
+        }
       } else {
+        socket.emit("newtweet", tweets);
         console.log("removed all listners");
         s.removeAllListeners();
+        // s.off("data");
       }
     });
 

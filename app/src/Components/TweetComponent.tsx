@@ -1,24 +1,37 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import tweetsReducer from "../Reducer/TweetsReducer";
 import store from "../Reducer/Store";
 import EachTweetCompnent from "./EachTweetCompnent";
+import { fetchData, socket } from "../Dao/SocketDao";
+import InfiniteScroll from "react-infinite-scroller";
+import Loading from "../icons/rolling.svg";
 export default function TweetComponent() {
   const [tweets, setTweets] = useState([]);
+  // fetchData(20);
+  // var count = 10;
   store.subscribe(() => {
-    console.log(store.getState().tweets);
-    setTweets([...store.getState().tweets]);
+    setTweets(...store.getState().tweets);
   });
-
-  // getState().tweets.map((tweet, index) => {
-  // console.log(tweet);
-  // return <div>{tweet.tweet}</div>;
-
   return (
     <div>
-      Hello Tweets
-      {tweets.map((tweet, index) => {
-        return <EachTweetCompnent tweet={tweet} />;
-      })}
+      <h4>Hello Tweets</h4>
+      <InfiniteScroll
+        pageStart={0}
+        loadMore={() => {
+          // count = count + 10;
+          fetchData();
+        }}
+        hasMore={true || false}
+        loader={
+          <div className="loader" key={0}>
+            <img src={Loading} />
+          </div>
+        }
+      >
+        {tweets.map((tweet, index) => {
+          return <EachTweetCompnent tweet={tweet} key={index} count={index} />;
+        })}
+      </InfiniteScroll>
     </div>
   );
 }
