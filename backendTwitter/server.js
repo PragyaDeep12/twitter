@@ -22,7 +22,6 @@ const twitter = new twit({
 });
 // var tweets = [];
 
-var stream = twitter.stream("statuses/sample");
 io.on("connection", socket => {
   console.log("connected");
   socket.on("disconnect", data => {
@@ -31,6 +30,8 @@ io.on("connection", socket => {
   socket.on("checkData", data => {
     var count = 0;
     var tweets = [];
+    console.log(data.url);
+    var stream = twitter.stream(data.url);
     var s = stream.on("data", tweet => {
       if (count < data.limit) {
         console.log(tweet);
