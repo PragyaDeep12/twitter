@@ -9,12 +9,27 @@ export default function TweetComponent() {
   const [tweets, setTweets] = useState([]);
   // fetchData(20);
   // var count = 10;
+  const [searchText, setSearchText] = useState();
   store.subscribe(() => {
     setTweets(...store.getState().tweets);
   });
   return (
     <div>
       <h4>Hello Tweets</h4>
+      <div className="row mb-2">
+        <div className="col-md-10">
+          <input className="form-control" placeholder="Search here" />
+        </div>
+        <div className="col-md-2">
+          <input
+            type="button"
+            className="btn btn-primary text-left"
+            value="search"
+            onClick={fetchData(searchText)}
+          />
+        </div>
+      </div>
+
       <InfiniteScroll
         pageStart={0}
         loadMore={() => {

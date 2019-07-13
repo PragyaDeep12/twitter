@@ -1,18 +1,10 @@
 const io = require("socket.io")();
-
 io.set("origins", "*:*");
 const twit = require("twitter");
-// const express = require("express")();
-// var server = require("http").Server(express);
-
 const port = process.env.PORT || 4000;
-// const server = require("http").Server(app);
-// const util = require("util");
 const CONSUMER_KEY = "0XG5299e6oSESyHvLGIMGmwW3";
 const CONSUMER_SECRET = "kh08Sydpo5hYYr0DCY8i7oJRAbxNkI1NKNpdStVi08ICIwBUOW";
 const ACCESS_TOKEN = "3097151617-91Ayf0gu7O81oe6ae3quLPX5cxYkf7pZlkNZ09h";
-const count = 0;
-
 const ACCESS_TOKEN_SECRET = "TPnK7IgPW0TB0m9NemXiyKAlZC6rBRpqi56w7sDhVxEgl";
 const twitter = new twit({
   consumer_key: CONSUMER_KEY,
@@ -20,58 +12,121 @@ const twitter = new twit({
   access_token_key: ACCESS_TOKEN,
   access_token_secret: ACCESS_TOKEN_SECRET
 });
-// var tweets = [];
-var filter = "";
-var stream = twitter.stream("statuses/filter", { track: filter });
 io.on("connection", socket => {
   console.log("connected");
-  socket.on("disconnect", data => {
-    console.log("disconnected");
-  });
   socket.on("checkData", data => {
-    console.log(data);
-    var count = 0;
-    var tweets = [];
-    var s = stream.on("data", tweet => {
-      if (count < data.limit) {
-        console.log(tweet);
-        if (tweet && tweet.lang && tweet.lang === "en") {
-          // socket.emit("newtweet", tweet);
-          tweets.push(tweet);
-          count++;
-        }
-      } else {
-        socket.emit("newtweet", tweets);
-        console.log("removed all listners");
-        s.removeAllListeners();
-        // s.off("data");
-      }
-    });
+    try {
+      console.log(data);
+      if (data) {
+        var count = 0;
+        try {
+          twitter.stream(
+            "statuses/filter",
+            { track: data.track ? data.track : "Worldcup" },
+            function(stream) {
+              console.log(stream);
+              try {
+                var tweets = [];
+                const func = tweet => {
+                  console.log(tweet);
+                  if (count < data.limit) {
+                    console.log(tweet);
+                    if (tweet && tweet.lang && tweet.lang === "en") {
+                      // socket.emit("newtweet", tweet);
+                      tweets.push(tweet);
+                      count++;
+                    }
+                  } else {
+                    socket.emit("newtweet", tweets);
+                    s.off("data");
 
-    // stream.setMaxListeners(60);
-    // stream.once(data.url, tweets => {
-    //   socket.emit("newtweet", tweets);
-    //   console.log(tweets);
-    // });
-    // twitter.get(data.url, data.params, (err, tweets, response) => {
-    //   if (!err) {
-    //     console.log(data);
-    //     socket.emit("newtweet", tweets);
-    //   } else {
-    //     console.log(err);
-    //   }
-    // });
+                    console.log("removed all listners");
+                    // s.off("data");
+                  }
+                };
+                var s = stream.on("data", func);
+                stream.on("error", error => {
+                  console.log(error);
+                  // s.removeListener("error", () => {
+                  //   console.log("error listner removed");
+                  // });
+                  // s.removeAllListeners();
+                });
+              } catch (err) {
+                console.log(err);
+              }
+            }
+          );
+        } catch (err) {
+          console.log(err);
+        }
+      }
+    } catch (err) {
+      console.log(err);
+    }
   });
-  // var filter = false;
-  // while (!filter) {
-  //   try {
-  //     // socket.emit("newtweet", tweets);
-  //     filter = true;
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // }
+  //socket connection ends here
 });
+io.listen(port);
+
+// socket.on("checkData", data => {
+//   console.log("inside");
+//   var count = 0;
+//   try {
+//     twitter.stream("statuses/filter", { track: "World Cup" }, function (
+//       stream
+//     ) {
+//       console.log(stream);
+//       try {
+//         var tweets = [];
+//         var s = stream.on("data", tweet => {
+//           console.log(tweet);
+//           if (count < data.limit) {
+//             console.log(tweet);
+//             if (tweet && tweet.lang && tweet.lang === "en") {
+//               // socket.emit("newtweet", tweet);
+//               tweets.push(tweet);
+//               count++;
+//             }
+//           } else {
+//             socket.emit("newtweet", tweets);
+//             console.log("removed all listners");
+//             s.removeAllListeners();
+//             // s.off("data");
+//           }
+//         });
+//       } catch (err) {
+//         console.log(err);
+//       }
+//     });
+//   } catch (err) {
+//     console.log(err);
+//   }
+//   //socket on checkData ends
+// });
+
+// stream.setMaxListeners(60);
+// stream.once(data.url, tweets => {
+//   socket.emit("newtweet", tweets);
+//   console.log(tweets);
+// });
+// twitter.get(data.url, data.params, (err, tweets, response) => {
+//   if (!err) {
+//     console.log(data);
+//     socket.emit("newtweet", tweets);
+//   } else {
+//     console.log(err);
+//   }
+// });
+// var filter = false;
+// while (!filter) {
+//   try {
+//     // socket.emit("newtweet", tweets);
+//     filter = true;
+//   } catch (err) {
+//     console.log(err);
+//   }
+// }
 // stream.on("data", function(tweet) {
 //   // console.log(tweet);
 
@@ -82,8 +137,6 @@ io.on("connection", socket => {
 //   },2000);
 //   // console.log(tweet);
 // });
-
-io.listen(process.env.PORT || 4000);
 
 // app.use(express.json());
 // app.use(express.urlencoded({ extended: true }));
