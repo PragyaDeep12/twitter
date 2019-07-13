@@ -5,7 +5,7 @@ export const fetchData = () => {
   CurrentCount = CurrentCount + incrementCount;
   socket.emit("checkData", {
     url: "/statuses/sample",
-    params: { name: "sharukh", q: "narendramodi" },
+    params: { name: "sharukh" },
     limit: CurrentCount
   });
 };

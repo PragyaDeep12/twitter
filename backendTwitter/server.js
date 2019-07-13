@@ -21,36 +21,32 @@ const twitter = new twit({
   access_token_secret: ACCESS_TOKEN_SECRET
 });
 // var tweets = [];
-
+var filter = "";
+var stream = twitter.stream("statuses/filter", { track: filter });
 io.on("connection", socket => {
   console.log("connected");
   socket.on("disconnect", data => {
     console.log("disconnected");
   });
   socket.on("checkData", data => {
+    console.log(data);
     var count = 0;
     var tweets = [];
-    console.log(data.url);
-    if (data.url) {
-      var stream = twitter.stream(data.url);
-      try {
-        var s = stream.on("data", tweet => {
-          if (count < data.limit) {
-            if (tweet && tweet.lang && tweet.lang === "en") {
-              // socket.emit("newtweet", tweet);
-              tweets.push(tweet);
-              count++;
-            }
-          } else {
-            socket.emit("newtweet", tweets);
-            // s.removeAllListeners();
-            // s.off("data");
-          }
-        });
-      } catch (err) {
-        console.log(err);
+    var s = stream.on("data", tweet => {
+      if (count < data.limit) {
+        console.log(tweet);
+        if (tweet && tweet.lang && tweet.lang === "en") {
+          // socket.emit("newtweet", tweet);
+          tweets.push(tweet);
+          count++;
+        }
+      } else {
+        socket.emit("newtweet", tweets);
+        console.log("removed all listners");
+        s.removeAllListeners();
+        // s.off("data");
       }
-    }
+    });
 
     // stream.setMaxListeners(60);
     // stream.once(data.url, tweets => {
