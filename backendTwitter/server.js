@@ -31,23 +31,27 @@ io.on("connection", socket => {
     var count = 0;
     var tweets = [];
     console.log(data.url);
-    if (data.url) {
-      var stream = twitter.stream(data.url);
-      var s = stream.on("data", tweet => {
-        if (count < data.limit) {
-          console.log(tweet);
-          if (tweet && tweet.lang && tweet.lang === "en") {
-            // socket.emit("newtweet", tweet);
-            tweets.push(tweet);
-            count++;
+    try {
+      if (data.url) {
+        var stream = twitter.stream(data.url);
+        var s = stream.on("data", tweet => {
+          if (count < data.limit) {
+            if (tweet && tweet.lang && tweet.lang === "en") {
+              // socket.emit("newtweet", tweet);
+              tweets.push(tweet);
+              count++;
+            }
+          } else {
+            socket.emit("newtweet", tweets);
+            s.removeAllListeners();
+            // s.off("data");
           }
-        } else {
-          socket.emit("newtweet", tweets);
-          console.log("removed all listners");
-          s.removeAllListeners();
-          // s.off("data");
-        }
-      });
+        });
+      }
+    } catch {
+      err => {
+        console.error(err);
+      };
     }
 
     // stream.setMaxListeners(60);
