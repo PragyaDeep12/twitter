@@ -4,7 +4,7 @@ export var incrementCount = 10;
 export const fetchData = () => {
   CurrentCount = CurrentCount + incrementCount;
   socket.emit("checkData", {
-    url: "/statuses/filter",
+    url: "/statuses/sample",
     params: { name: "sharukh", q: "narendramodi" },
     limit: CurrentCount
   });

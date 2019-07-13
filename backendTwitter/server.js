@@ -31,9 +31,9 @@ io.on("connection", socket => {
     var count = 0;
     var tweets = [];
     console.log(data.url);
-    try {
-      if (data.url) {
-        var stream = twitter.stream(data.url);
+    if (data.url) {
+      var stream = twitter.stream(data.url);
+      try {
         var s = stream.on("data", tweet => {
           if (count < data.limit) {
             if (tweet && tweet.lang && tweet.lang === "en") {
@@ -43,15 +43,13 @@ io.on("connection", socket => {
             }
           } else {
             socket.emit("newtweet", tweets);
-            s.removeAllListeners();
+            // s.removeAllListeners();
             // s.off("data");
           }
         });
+      } catch (err) {
+        console.log(err);
       }
-    } catch {
-      err => {
-        console.error(err);
-      };
     }
 
     // stream.setMaxListeners(60);
