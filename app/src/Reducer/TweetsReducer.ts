@@ -18,7 +18,7 @@ export default function tweetsReducer(state: TweetModel[] = [], action: any) {
     case NEW_TWEET_ARRIVED: {
       //instead of pushing to  array you can push to socket4
       //console.log("pushing messggae through new request arrived");
-      state.unshift(action.payload);
+      state.push(action.payload);
       return state;
     }
 

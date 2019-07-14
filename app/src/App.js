@@ -11,9 +11,16 @@ import TweetsPage from "./Pages/TweetsPage";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { newRequestArrived } from "./Actions/TweetsAction";
 function App(props) {
-  fetchData();
+  // fetchData();
   socket.on("newtweet", data => {
-    store.dispatch(newRequestArrived(data));
+    console.log(data);
+    if (store.getState().tweets[0]) {
+      var newList = [...store.getState().tweets[0], ...data];
+    } else {
+      var newList = [...data];
+    }
+    console.log(newList);
+    store.dispatch(newRequestArrived(newList));
   });
   return (
     <div className="App">

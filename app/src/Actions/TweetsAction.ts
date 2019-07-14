@@ -7,6 +7,7 @@ export function newRequest(request) {
   return { type: NEW_TWEET_RAISED, payload: request };
 }
 export function newRequestArrived(request) {
+  console.log(request);
   return { type: NEW_TWEET_ARRIVED, payload: request as TweetModel[] };
 }
 
