@@ -12,7 +12,10 @@ const twitter = new twit({
   access_token_key: ACCESS_TOKEN,
   access_token_secret: ACCESS_TOKEN_SECRET
 });
-var stream = twitter.stream("statuses/sample");
+var stream1 = twitter.stream("statuses/sample");
+var stream = twitter.stream("statuses/filter", {
+  track: "love"
+});
 io.on("connection", socket => {
   console.log("connected");
   socket.on("checkData", data => {
@@ -22,10 +25,10 @@ io.on("connection", socket => {
         var count = 0;
         try {
           var tweets = [];
-          stream.on("data", function(tweet) {
+          stream1.on("data", function(tweet) {
             // console.log(tweet);
             if (count < data.limit) {
-              console.log(tweet);
+              // console.log(tweet);
               if (tweet && tweet.lang && tweet.lang === "en") {
                 // socket.emit("newtweet", tweet);
                 tweets.push(tweet);
@@ -37,7 +40,31 @@ io.on("connection", socket => {
 
               console.log("removed all listners");
               // stream.off("data");
-              stream.removeAllListeners();
+              stream1.removeAllListeners();
+            }
+          });
+
+          socket.on("filterData", data => {
+            if (data) {
+              console.log(data);
+              if (data.track) {
+                console.log(data.track);
+
+                var tweets = [];
+                var count = 0;
+                stream.on("data", function(tweet) {
+                  if (count < data.limit) {
+                    tweets.push(tweet);
+                  } else {
+                    socket.emit("filteredData", tweets);
+                    stream.removeAllListeners();
+                  }
+                });
+                stream.on("error", error => {
+                  console.log(error);
+                  stream.removeAllListeners();
+                });
+              }
             }
           });
 
@@ -95,57 +122,57 @@ io.on("connection", socket => {
     // }
   });
   //socket connection ends here
-  socket.on("filterData", data => {
-    try {
-      console.log(data);
-      if (data) {
-        var count = 0;
-        try {
-          twitter.stream(
-            "statuses/filter",
-            { track: data.track ? data.track.toString() : "Worldcup" },
-            function(stream) {
-              // console.log(stream);
-              try {
-                var tweets = [];
-                const func = tweet => {
-                  // console.log(tweet);
-                  if (count < data.limit) {
-                    // console.log(tweet);
-                    if (tweet && tweet.lang && tweet.lang === "en") {
-                      // socket.emit("newtweet", tweet);
-                      tweets.push(tweet);
-                      count++;
-                    }
-                  } else {
-                    socket.emit("newtweet", tweets);
-                    s.off("data");
+  // socket.on("filterData", data => {
+  //   try {
+  //     console.log(data);
+  //     if (data) {
+  //       var count = 0;
+  //       try {
+  //         twitter.stream(
+  //           "statuses/filter",
+  //           { track: data.track ? data.track.toString() : "Worldcup" },
+  //           function(stream) {
+  //             console.log(stream);
+  //             try {
+  //               var tweets = [];
+  //               const func = tweet => {
+  //                 // console.log(tweet);
+  //                 if (count < data.limit) {
+  //                   // console.log(tweet);
+  //                   if (tweet && tweet.lang && tweet.lang === "en") {
+  //                     // socket.emit("newtweet", tweet);
+  //                     tweets.push(tweet);
+  //                     count++;
+  //                   }
+  //                 } else {
+  //                   socket.emit("newtweet", tweets);
+  //                   s.off("data");
 
-                    console.log("removed all listners");
-                    // s.off("data");
-                  }
-                };
-                var s = stream.on("data", func);
-                stream.on("error", error => {
-                  console.log(error);
-                  // s.removeListener("error", () => {
-                  //   console.log("error listner removed");
-                  // });
-                  // s.removeAllListeners();
-                });
-              } catch (err) {
-                console.log(err);
-              }
-            }
-          );
-        } catch (err) {
-          console.log(err);
-        }
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  });
+  //                   console.log("removed all listners");
+  //                   // s.off("data");
+  //                 }
+  //               };
+  //               var s = stream.on("data", func);
+  //               stream.on("error", error => {
+  //                 console.log(error);
+  //                 // s.removeListener("error", () => {
+  //                 //   console.log("error listner removed");
+  //                 // });
+  //                 // s.removeAllListeners();
+  //               });
+  //             } catch (err) {
+  //               console.log(err);
+  //             }
+  //           }
+  //         );
+  //       } catch (err) {
+  //         console.log(err);
+  //       }
+  //     }
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // });
 });
 io.listen(port);
 

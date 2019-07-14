@@ -12,14 +12,18 @@ export default function tweetsReducer(state: TweetModel[] = [], action: any) {
       //  state.push(action.payload as RequestMessage);
       //push data using to server using socket
       //console.log("newRequest From Clinet End");
-      socket.emit("newTweet", action.payload);
+      // socket.emit("newTweet", action.payload);
       return state;
     }
     case NEW_TWEET_ARRIVED: {
       //instead of pushing to  array you can push to socket4
       //console.log("pushing messggae through new request arrived");
-      state.push(action.payload);
-      return state;
+      console.log(action.payload);
+      // action.payload.map((element)=>{
+      //   state.push(action.payload);
+      // })
+    
+      return action.payload;
     }
 
     //   case ALL_REQUEST_FETCH: {

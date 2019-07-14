@@ -9,21 +9,31 @@ export default function TweetComponent() {
   const [search, setSearch] = useState("");
   const [tweets, setTweets] = useState([]);
   const [updated, setUpdated] = useState(false);
+  const [filteredList, setFilteredList] = useState([]);
+  const [filter, setFilter] = useState(false);
   // fetchData(20);
   // var count = 10;
-  const [searchText, setSearchText] = useState();
+  // const [searchText, setSearchText] = useState();
   useEffect(() => {
     setUpdated(!updated);
   }, [tweets]);
   store.subscribe(() => {
     console.log("rendered");
-    console.log(...store.getState().tweets);
-    setTweets(...store.getState().tweets);
+    // console.log(store.getState().tweets);
+    setTweets(store.getState().tweets);
+  });
+  const filterTweets = () => {
+    fetchData(search);
+  };
+  socket.on("filteredData", data => {
+    console.log(data);
+    setFilteredList(data);
+    setFilter(true);
   });
   return (
-    <div>
+    <div className="bg-dark">
       <h4>Hello Tweets</h4>
-      {console.log(tweets)}
+
       <div className="row mb-2">
         <div className="col-md-10">
           <input
@@ -40,30 +50,40 @@ export default function TweetComponent() {
             className="btn btn-primary text-left"
             value="search"
             onClick={() => {
-              fetchData(searchText);
+              filterTweets();
             }}
           />
         </div>
       </div>
 
-      <InfiniteScroll
-        pageStart={0}
-        loadMore={() => {
-          console.log("here");
-          // count = count + 10;
-          fetchData();
-        }}
-        hasMore={true || false}
-        loader={
-          <div className="loader" key={0}>
-            <img src={Loading} />
-          </div>
-        }
-      >
-        {tweets.map((tweet, index) => {
-          return <EachTweetCompnent tweet={tweet} key={index} count={index} />;
-        })}
-      </InfiniteScroll>
+      <div className="showTweets">
+        <InfiniteScroll
+          pageStart={0}
+          loadMore={() => {
+            console.log("here");
+            // count = count + 10;
+            filter ? fetchData(search) : fetchData();
+          }}
+          hasMore={true || false}
+          loader={
+            <div className="loader" key={0}>
+              <img src={Loading} />
+            </div>
+          }
+        >
+          {filter
+            ? filteredList.map((tweet, index) => {
+                return (
+                  <EachTweetCompnent tweet={tweet} key={index} count={index} />
+                );
+              })
+            : tweets.map((tweet, index) => {
+                return (
+                  <EachTweetCompnent tweet={tweet} key={index} count={index} />
+                );
+              })}
+        </InfiniteScroll>
+      </div>
     </div>
   );
 }

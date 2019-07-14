@@ -15,11 +15,11 @@ function App(props) {
   socket.on("newtweet", data => {
     console.log(data);
     if (store.getState().tweets[0]) {
-      var newList = [...store.getState().tweets[0], ...data];
+      var newList = [...store.getState().tweets, ...data];
     } else {
       var newList = [...data];
     }
-    console.log(newList);
+    // console.log(newList);
     store.dispatch(newRequestArrived(newList));
   });
   return (
