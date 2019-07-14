@@ -5,12 +5,16 @@
   border-radius: 10px !important;
   box-shadow: 2px 2px 5px #888888;
 }
+.full-page {
+  height: 100% !important;
+  width: 100vw !important;
+}
 .showTweets {
   display: fixed;
   margin-right: auto;
   margin-left: auto;
   width: calc(200px + 40vw);
-  margin-top: calc(10vh);
+  margin-top: calc(4vh);
   border-radius: 5px;
   z-index: 10;
 }
@@ -26,4 +30,30 @@
   border-radius: 24px;
   box-shadow: 0px 0px 10px #888888;
   /* box-shadow: 2px 2px 5px #888888; */
+}
+link {
+  text-decoration-style: none !important;
+  cursor: pointer !important;
+}
+.page-heading {
+  color: white;
+  font-weight: 700;
+  font-size: 40px;
+
+  padding-left: 20px;
+  text-align: left;
+}
+.page-heading-link {
+  padding-top: 18px;
+  padding-left: 20px;
+  text-align: left;
+}
+.page-heading-link > a {
+  color: rgb(214, 208, 208) !important;
+  font-weight: 700;
+  font-size: 26px;
+  text-decoration-color: rgb(214, 208, 208);
+}
+.page-heading-link > a:hover {
+  text-decoration-line: none;
 }

@@ -5,83 +5,41 @@ import EachTweetCompnent from "./EachTweetCompnent";
 import { fetchData, socket } from "../Dao/SocketDao";
 import InfiniteScroll from "react-infinite-scroller";
 import Loading from "../icons/rolling.svg";
+import { NavLink } from "react-router-dom";
+import { getCurrentRequestList } from "../Actions/TweetsAction";
 export default function TweetComponent() {
-  const [search, setSearch] = useState("");
   const [tweets, setTweets] = useState([]);
-  const [updated, setUpdated] = useState(false);
-  const [filteredList, setFilteredList] = useState([]);
-  const [filter, setFilter] = useState(false);
-  // fetchData(20);
-  // var count = 10;
-  // const [searchText, setSearchText] = useState();
-  useEffect(() => {
-    setUpdated(!updated);
-  }, [tweets]);
   store.subscribe(() => {
     console.log("rendered");
-    // console.log(store.getState().tweets);
-    setTweets(store.getState().tweets);
-  });
-  const filterTweets = () => {
-    fetchData(search);
-  };
-  socket.on("filteredData", data => {
-    console.log(data);
-    setFilteredList(data);
-    setFilter(true);
+    setTweets(getCurrentRequestList());
   });
   return (
-    <div className="bg-dark">
-      <h4>Hello Tweets</h4>
+    <div className="bg-dark full-page">
+      <div className="row">
+        <span className="page-heading">Latest Tweets</span>
 
-      <div className="row mb-2">
-        <div className="col-md-10">
-          <input
-            className="form-control"
-            placeholder="Search here"
-            onChange={e => {
-              setSearch(e.target.value);
-            }}
-          />
-        </div>
-        <div className="col-md-2">
-          <input
-            type="button"
-            className="btn btn-primary text-left"
-            value="search"
-            onClick={() => {
-              filterTweets();
-            }}
-          />
-        </div>
+        <span className="page-heading-link ">
+          {" "}
+          <NavLink to="/search">Search Tweets </NavLink>
+        </span>
       </div>
 
       <div className="showTweets">
         <InfiniteScroll
           pageStart={0}
-          loadMore={() => {
-            console.log("here");
-            // count = count + 10;
-            filter ? fetchData(search) : fetchData();
-          }}
-          hasMore={true || false}
+          loadMore={fetchData}
+          hasMore={tweets.length < 100}
           loader={
             <div className="loader" key={0}>
               <img src={Loading} />
             </div>
           }
         >
-          {filter
-            ? filteredList.map((tweet, index) => {
-                return (
-                  <EachTweetCompnent tweet={tweet} key={index} count={index} />
-                );
-              })
-            : tweets.map((tweet, index) => {
-                return (
-                  <EachTweetCompnent tweet={tweet} key={index} count={index} />
-                );
-              })}
+          {tweets.map((tweet, index) => {
+            return (
+              <EachTweetCompnent tweet={tweet} key={index} count={index} />
+            );
+          })}
         </InfiniteScroll>
       </div>
     </div>
