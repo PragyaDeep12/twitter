@@ -1,12 +1,17 @@
 .each-tweet {
   background-color: rgb(247, 240, 208);
-  margin-bottom: 10px;
+  margin-top: 10px;
   padding: 5px;
   border-radius: 10px !important;
   box-shadow: 2px 2px 5px #888888;
 }
 .full-page {
-  height: 100% !important;
+  width: 100vw !important;
+  background-color: #343a40 !important;
+}
+
+.full-page-height {
+  height: 100vh !important;
   width: 100vw !important;
 }
 .showTweets {
@@ -17,6 +22,7 @@
   margin-top: calc(4vh);
   border-radius: 5px;
   z-index: 10;
+  padding-bottom: 30px;
 }
 .profile-background {
   padding-top: 10px;
@@ -56,4 +62,9 @@ link {
 }
 .page-heading-link > a:hover {
   text-decoration-line: none;
+}
+.time-stamp {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 2px !important;
 }

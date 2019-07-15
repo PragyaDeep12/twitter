@@ -14,33 +14,36 @@ export default function TweetComponent() {
     setTweets(getCurrentRequestList());
   });
   return (
-    <div className="bg-dark full-page">
-      <div className="row">
-        <span className="page-heading">Latest Tweets</span>
+    <div className="full-page-height bg-dark">
+      <div className="bg-dark full-page">
+        <div className="row">
+          <span className="page-heading">Latest Tweets</span>
 
-        <span className="page-heading-link ">
-          {" "}
-          <NavLink to="/search">Search Tweets </NavLink>
-        </span>
-      </div>
-
-      <div className="showTweets">
-        <InfiniteScroll
-          pageStart={0}
-          loadMore={fetchData}
-          hasMore={tweets.length < 100}
-          loader={
-            <div className="loader" key={0}>
-              <img src={Loading} />
-            </div>
-          }
-        >
-          {tweets.map((tweet, index) => {
-            return (
-              <EachTweetCompnent tweet={tweet} key={index} count={index} />
-            );
-          })}
-        </InfiniteScroll>
+          <span className="page-heading-link ">
+            {" "}
+            <NavLink to="/search">Search Tweets </NavLink>
+          </span>
+        </div>
+        <div className="full-page">
+          <div className="showTweets">
+            <InfiniteScroll
+              pageStart={0}
+              loadMore={fetchData}
+              hasMore={tweets.length < 100}
+              loader={
+                <div className="loader" key={0}>
+                  <img src={Loading} />
+                </div>
+              }
+            >
+              {tweets.map((tweet, index) => {
+                return (
+                  <EachTweetCompnent tweet={tweet} key={index} count={index} />
+                );
+              })}
+            </InfiniteScroll>
+          </div>
+        </div>
       </div>
     </div>
   );

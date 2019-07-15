@@ -5,7 +5,7 @@ export default function EachTweetCompnent(props) {
   const tweet: TweetModel = props.tweet;
   return (
     <div>
-      <div className="each-tweet card text-left bg-light ml-1 mr-1">
+      <div className="each-tweet card text-left bg-light">
         <div className="row">
           <div className="col-md-2 profile-background">
             <img
@@ -24,14 +24,14 @@ export default function EachTweetCompnent(props) {
                 : "No Name"}
             </h5>
             <div className="tweetText">{tweet.text}</div>
-            <h6 className="text-right">
+            <p className="time-stamp text-right">
               {tweet.timestamp_ms
                 ? format(
                     Number.parseInt(tweet.timestamp_ms.toString()),
                     "DD,MMM hh:mm a"
                   )
                 : ""}
-            </h6>
+            </p>
           </div>
         </div>
 

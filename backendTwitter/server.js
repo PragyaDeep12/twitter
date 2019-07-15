@@ -59,7 +59,32 @@ function initFilterArray(track) {
   });
   return promise;
 }
+function initNewTweetsArrived() {
+  twitter.stream("statuses/sample", function(stream) {
+    console.log("init New tweet");
+    //callback recieves stream as socket
+    var prev = null;
+    setInterval(() => {
+      stream.once("data", function(tweet) {
+        if (prev != tweet && tweet.lang === "en") {
+          //not same as previous tweets push as new arrived
+          console.log("new tweet arrived");
+          prev = tweet;
+          io.sockets.emit("newtweet", [tweet, ...latestTweets]);
+          stream.removeAllListeners();
+        } else {
+          console.log("same tweet arrived");
+        }
+      });
+    }, 1000);
+    stream.on("error", function(error) {
+      // stream.removeAllListeners();
+      console.log("error");
+    });
+  });
+}
 initLatestTweets();
+// initNewTweetsArrived();
 io.on("connection", socket => {
   //fetches filtered tweets
   socket.on("filterTweets", data => {
@@ -73,28 +98,6 @@ io.on("connection", socket => {
             .catch(err => {
               console.log(err);
             });
-          // var tweets = [];
-          // twitter.stream("statuses/filter", { track: data.track }, function(
-          //   stream
-          // ) {
-          //   //callback recieves stream as socket
-          //   stream.on("data", function(tweet) {
-          //     if (tweets.length <= data.limit) {
-          //       //push till  length is limited
-          //       console.log("added " + tweets.length);
-          //       tweets.push(tweet);
-          //     } else {
-          //       //limit reached release listners or else it will remain connected
-          //       socket.emit("filteredTweets", tweets);
-          //       console.log("Avoided");
-          //       stream.removeAllListeners();
-          //     }
-          //   });
-
-          //   stream.on("error", function(error) {
-          //     console.log(error);
-          //   });
-          // });
         } catch (err) {
           console.log(err);
         }
@@ -107,7 +110,7 @@ io.on("connection", socket => {
       console.log(data);
       if (data && data.limit) {
         if (latestTweets.length >= data.limit)
-          socket.emit("newtweet", latestTweets.slice(0, data.limit));
+          socket.emit("latesttweet", latestTweets.slice(0, data.limit));
       }
     } catch (err) {
       console.log("Error", err);

@@ -4,4 +4,5 @@ export const NEW_TWEET_RAISED = "new_tweet_raised";
 export const NEW_FILTERED_TWEET_ARRIVED = "new_flitered_tweet_arrived";
 export const NEW_FILTERED_TWEET_RAISED = "new_flitered_tweet_raised";
 export const SOCKET_ON_FILTERED_TWEETS = "filteredTweets";
-export const SOCKET_ON_ALL_LATEST_TWEETS = "newtweet";
+export const SOCKET_ON_ALL_LATEST_TWEETS = "latesttweet";
+export const SOCKET_ON_NEW_TWEETS = "newtweet";
