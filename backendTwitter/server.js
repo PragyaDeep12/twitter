@@ -13,6 +13,7 @@ const twitter = new twit({
   access_token_secret: ACCESS_TOKEN_SECRET
 });
 var latestTweets = [];
+var filteredTweets = [];
 function initLatestTweets() {
   twitter.stream("statuses/sample", function(stream) {
     console.log("iniit");
@@ -46,6 +47,7 @@ function initFilterArray(track) {
             filterTweets.push(tweet);
           }
         } else {
+          filteredTweets = filterTweets;
           resolve(filterTweets);
           console.log("removed all Filter listners");
           stream.removeAllListeners("data");
