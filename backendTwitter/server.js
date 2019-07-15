@@ -26,7 +26,6 @@ function initErrorListener(stream, count) {
       prevStream1 = stream;
       console.log("listner inited");
       prevStream1.on("error", function(error) {
-        // stream.removeAllListeners("error");
         console.log("error");
       });
     } else {
