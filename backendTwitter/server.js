@@ -31,7 +31,6 @@ function initErrorListener(stream, count) {
       });
     } else {
       //its inited so remove previosly attached listerner
-
       prevStream1.removeAllListeners();
       //make it null
       prevStream1 = null;

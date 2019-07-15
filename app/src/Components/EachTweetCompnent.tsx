@@ -31,7 +31,9 @@ export default function EachTweetCompnent(props) {
                   : "No Name"
                 : "No Name"}
             </h5>
-            <div className="tweetText" id="tweet-text" />
+            <div className="tweetText" id="tweet-text">
+              {tweet.text}
+            </div>
             <p className="time-stamp text-right">
               {tweet.timestamp_ms
                 ? format(
