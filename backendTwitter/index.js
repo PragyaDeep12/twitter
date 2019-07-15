@@ -19,7 +19,7 @@ var prevStream1 = null;
 var prevStream2 = null;
 function initErrorListener(stream, count) {
   if (count == 1) {
-    //we will work with prevStream1
+    //we will work with prevStream 1
     //we will check if its inited
     if (prevStream1 === null) {
       //its not inited
