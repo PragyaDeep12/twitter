@@ -1,4 +1,6 @@
-export const socket = require("socket.io-client")("http://localhost:4000/");
+export const socket = require("socket.io-client")(
+  "https://abracadabrant-bastille-91633.herokuapp.com/"
+);
 export var CurrentCount = 0;
 export var incrementCount = 10;
 export const fetchData = (track?: String) => {
