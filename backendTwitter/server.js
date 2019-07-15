@@ -24,7 +24,7 @@ function initLatestTweets() {
         }
       } else {
         console.log("removed all listners");
-        stream.removeAllListeners();
+        stream.removeAllListeners("data");
       }
     });
     stream.on("error", function(error) {
@@ -48,7 +48,7 @@ function initFilterArray(track) {
         } else {
           resolve(filterTweets);
           console.log("removed all Filter listners");
-          stream.removeAllListeners();
+          stream.removeAllListeners("data");
         }
       });
       stream.on("error", function(error) {
@@ -59,30 +59,7 @@ function initFilterArray(track) {
   });
   return promise;
 }
-function initNewTweetsArrived() {
-  twitter.stream("statuses/sample", function(stream) {
-    console.log("init New tweet");
-    //callback recieves stream as socket
-    var prev = null;
-    setInterval(() => {
-      stream.once("data", function(tweet) {
-        if (prev != tweet && tweet.lang === "en") {
-          //not same as previous tweets push as new arrived
-          console.log("new tweet arrived");
-          prev = tweet;
-          io.sockets.emit("newtweet", [tweet, ...latestTweets]);
-          stream.removeAllListeners();
-        } else {
-          console.log("same tweet arrived");
-        }
-      });
-    }, 1000);
-    stream.on("error", function(error) {
-      // stream.removeAllListeners();
-      console.log("error");
-    });
-  });
-}
+
 initLatestTweets();
 // initNewTweetsArrived();
 io.on("connection", socket => {
