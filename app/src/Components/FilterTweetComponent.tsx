@@ -59,7 +59,12 @@ export default function FilterTweetComponent() {
           {list ? (
             list.map((tweet, index) => {
               return (
-                <EachTweetCompnent tweet={tweet} key={index} count={index} />
+                <EachTweetCompnent
+                  tweet={tweet}
+                  key={index}
+                  count={index}
+                  searchText={searchTerm}
+                />
               );
             })
           ) : (

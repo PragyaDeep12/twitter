@@ -12,7 +12,7 @@ export const fetchData = (track?: String) => {
 
 export const getFilterTweets = (track: String) => {
   socket.emit("filterTweets", {
-    limit: incrementCount,
+    limit: 20,
     track: track
   });
 };

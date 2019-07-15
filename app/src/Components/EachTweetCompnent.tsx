@@ -1,8 +1,16 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { TweetModel } from "../Models/TweetModel";
+import { createHtml } from "../utils";
 export default function EachTweetCompnent(props) {
   const tweet: TweetModel = props.tweet;
+  // const  [textBody,setTextBody]=useState(props.tweet.text);
+  useEffect(() => {
+    var tweetText = document.getElementById("tweet-text");
+    if (tweetText && props.searchText) {
+      tweetText.innerHTML = createHtml(tweet.text, props.searchText).toString();
+    }
+  }, []);
   return (
     <div>
       <div className="each-tweet card text-left bg-light">
@@ -23,7 +31,7 @@ export default function EachTweetCompnent(props) {
                   : "No Name"
                 : "No Name"}
             </h5>
-            <div className="tweetText">{tweet.text}</div>
+            <div className="tweetText" id="tweet-text" />
             <p className="time-stamp text-right">
               {tweet.timestamp_ms
                 ? format(
