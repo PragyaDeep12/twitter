@@ -30,7 +30,7 @@ function initErrorListener(stream, count) {
       });
     } else {
       //its inited so remove previosly attached listerner
-      prevStream1.removeAllListeners();
+      prevStream1.removeAllListeners("error");
       //make it null
       prevStream1 = null;
       //now its null so if we call initErrorListner it will be reinitted
@@ -44,13 +44,14 @@ function initErrorListener(stream, count) {
     if (prevStream2 === null) {
       //its not inited
       prevStream2 = stream;
+      console.log(prevStream2.listenerCount);
       prevStream2.on("error", function(error) {
         // stream.removeAllListeners("error");
         console.log("error");
       });
     } else {
       //its inited so remove previosly attached listerner
-      prevStream2.removeAllListeners();
+      prevStream2.removeAllListeners("error");
       //make it null
       prevStream2 = null;
       //now its null so if we call initErrorListner it will be reinitted
